@@ -1,0 +1,74 @@
+<html>
+<head>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+  <style>
+    body {
+      text-align: center;
+      font-family: Roboto;
+       color: #888;
+    }
+    h1 {
+      color: #555;
+    }
+    #map {
+      height: 500px;
+    }
+    .leaflet-container {
+      background-color: #eee;
+      border: 1px solid #888;
+      border-radius: 15px;
+    }
+    .round-marker {
+      background-color: #555;
+      border-radius: 50%;
+      height: 5px;
+      width: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>How Do You Use Leaflet.js For X,Y (unprojected) Slippy Maps?</h1>
+  <p>Points in X,Y coordinate space.</p>
+  <div id="map"></div>
+
+  <script type="text/javascript">
+    // Useful clues from: http://gis.stackexchange.com/questions/76059/how-to-project-pixel-coordinates-in-leaflet
+    // set view options
+    var opts = {
+      minZoom: 5,
+      maxZoom: 8,
+      crs: L.CRS.Simple //gives us x,y space
+    }
+
+    // create the map layer and set initial view center and zoom.
+    var map = L.map('map', opts).setView([5, 5], 5);
+
+    // set view outerbounds, so we don't go scrolling infinitely in any direction
+    var ne = [12,12];
+    var sw = [0,0]; //lets keep things positive for now :)
+
+    var bounds = new L.LatLngBounds([sw, ne]);
+    map.setMaxBounds(bounds);
+
+    //create an array of points to play with, 0.0 --> 10.10
+    var points = [[0,0], [1,1], [2,2], [3,3], [4,4], [5,5],
+                  [6,6], [7,7], [8,8], [9,9], [10,10]];
+
+    // Define our simple icon for the point markers. We define its shape with CSS!
+    var icon = L.divIcon({
+      className: 'round-marker'
+    });
+
+    //add points to the map individually:
+    for(i=0; i < points.length; i++) {
+      var point = points[i]
+      var ptOpts = {
+        icon: icon
+      }
+      L.marker(point, ptOpts).addTo(map);
+    };
+  </script>
+</body>
+</html>
