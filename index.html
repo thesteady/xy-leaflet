@@ -64,10 +64,14 @@
     //add points to the map individually:
     for(i=0; i < points.length; i++) {
       var point = points[i]
+      var pContent = ['<h2>Point:</h2><p>x:',point[0],', y:',point[1],'</p>'].join("")
       var ptOpts = {
         icon: icon
       }
-      L.marker(point, ptOpts).addTo(map);
+
+      var marker = L.marker(point, ptOpts)
+      marker.addTo(map)
+            .bindPopup(pContent)
     };
   </script>
 </body>
