@@ -7,7 +7,7 @@
     body {
       text-align: center;
       font-family: Roboto;
-       color: #888;
+      color: #888;
     }
     h1 {
       color: #555;
@@ -32,9 +32,13 @@
   <h1>How Do You Use Leaflet.js For X,Y (unprojected) Slippy Maps?</h1>
   <p>Points in X,Y coordinate space.</p>
   <div id="map"></div>
+  <p>Ok, that's neat, but what happens with a LOT of points?</p>
+  <p>Add 100 at a time:</p>
+  <button id="add-points" onClick="addPoints(true)">Add Some Points</button>
 
   <script type="text/javascript">
     // Useful clues from: http://gis.stackexchange.com/questions/76059/how-to-project-pixel-coordinates-in-leaflet
+
     // set view options
     var opts = {
       minZoom: 5,
@@ -47,32 +51,65 @@
 
     // set view outerbounds, so we don't go scrolling infinitely in any direction
     var ne = [12,12];
-    var sw = [0,0]; //lets keep things positive for now :)
+    var sw = [0,0]; // let's keep things positive for now :)
 
     var bounds = new L.LatLngBounds([sw, ne]);
     map.setMaxBounds(bounds);
 
-    //create an array of points to play with, 0.0 --> 10.10
-    var points = [[0,0], [1,1], [2,2], [3,3], [4,4], [5,5],
-                  [6,6], [7,7], [8,8], [9,9], [10,10]];
+    var generateLotsOfPoints = function(numPoints, neBounds, swBounds) {
+      var maxX = neBounds[0],
+      maxY = neBounds[1],
+      minX = swBounds[0],
+      minY = swBounds[1],
+      points = [],
+      genCoord = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
 
-    // Define our simple icon for the point markers. We define its shape with CSS!
-    var icon = L.divIcon({
-      className: 'round-marker'
-    });
-
-    //add points to the map individually:
-    for(i=0; i < points.length; i++) {
-      var point = points[i]
-      var pContent = ['<h2>Point:</h2><p>x:',point[0],', y:',point[1],'</p>'].join("")
-      var ptOpts = {
-        icon: icon
+      for(i=0; i < numPoints; i++) {
+         var newPt = [genCoord(minX, maxX), genCoord(minY, maxY)];
+         points.push(newPt);
       }
+      return points;
+    }
+
+
+    // Define our simple icon for the point markers. We set its shape with CSS!
+    var ptOpts = {
+      icon: L.divIcon({
+        className: 'round-marker'
+      })
+    }
+
+    var addPoint = function(point) {
+      var pContent = [
+        '<h2>Point:</h2>',
+        '<p>x:', point[0], ', y:', point[1],'</p>'
+      ].join("");
 
       var marker = L.marker(point, ptOpts)
       marker.addTo(map)
-            .bindPopup(pContent)
-    };
+            .bindPopup(pContent);
+    }
+
+    var addPoints = function(showMany) {
+      var points;
+      if(showMany == true) {
+        points = generateLotsOfPoints(100, ne, sw);
+      } else {
+        // create an array of points to start with, 0.0 --> 10.10
+        points = [[0,0], [1,1], [2,2], [3,3], [4,4], [5,5],
+                 [6,6], [7,7], [8,8], [9,9], [10,10]];
+      }
+
+      // add points to the map individually:
+      points.forEach(function(point) {
+        addPoint(point)
+      });
+    }
+
+    // initialize map with a small set of points.
+    addPoints();
   </script>
 </body>
 </html>
