@@ -41,17 +41,17 @@
 
     // set view options
     var opts = {
-      minZoom: 5,
+      minZoom: 4,
       maxZoom: 8,
       crs: L.CRS.Simple //gives us x,y space
     }
 
     // create the map layer and set initial view center and zoom.
-    var map = L.map('map', opts).setView([5, 5], 5);
+    var map = L.map('map', opts).setView([5, 1], 4);
 
     // set view outerbounds, so we don't go scrolling infinitely in any direction
-    var ne = [12,12];
-    var sw = [0,0]; // let's keep things positive for now :)
+    var ne = [20,20];
+    var sw = [-1,-1]; //go _just_ outside our starting points area.
 
     var bounds = new L.LatLngBounds([sw, ne]);
     map.setMaxBounds(bounds);
@@ -59,8 +59,8 @@
     var generateLotsOfPoints = function(numPoints, neBounds, swBounds) {
       var maxX = neBounds[0],
       maxY = neBounds[1],
-      minX = swBounds[0],
-      minY = swBounds[1],
+      minX = swBounds[0] + 1,
+      minY = swBounds[1] + 1,
       points = [],
       genCoord = function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -97,9 +97,9 @@
       if(showMany == true) {
         points = generateLotsOfPoints(100, ne, sw);
       } else {
-        // create an array of points to start with, 0.0 --> 10.10
+        // create an array of points to start with, 0.0 --> 20.10
         points = [[0,0], [1,1], [2,2], [3,3], [4,4], [5,5],
-                 [6,6], [7,7], [8,8], [9,9], [10,10]];
+                 [6,6], [7,7], [10,10], [15,15], [20,20]];
       }
 
       // add points to the map individually:
