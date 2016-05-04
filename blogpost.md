@@ -26,7 +26,7 @@ How do we compare different points on the ground? Well, to make things more comp
 
 In this example, we want our data to be **unprojected**. This means we want to make sure that Leaflet.js does not apply the Web Mercator projection, which is the default setting.
 
-## Let's Try It Out!
+## Ok, Now We Can Start
 ** Want to see the finished code for this project? Check it out on [GitHub](https://github.com/thesteady/xy-leaflet).**
 
 To explore how an unprojected web map works in Leaflet, let's use a simple set-up. First, we'll need an `index.html` file with the basic structure like so:
@@ -67,13 +67,7 @@ If you load your `index.html` in a browser at this point, you'll get a whopping 
 </style>
 ```
 
-This will give our map a height, a background color, and a border. Try refreshing the page, and you should see your map!
-
-
-
-- what's the key to no projection? OH SNAP ITS EAAAASSSY.
-
-- lets add some points
+This will give our map a height, a background color, and a border. Try refreshing the page, and you should see your base map.
 
 We have a basemap, but does it actually work the way we expect it to? Let's add some points to find out! Let's use a simple case of a few easy-to-think-about points:
 ```
@@ -87,8 +81,13 @@ Now that we've defined our point set, let's add them to the map. While we're doi
 ```
 
 - check it out visually
+- but wait! it's not what we want. dundundunnnn projections.
 
-Now reload your page in the browser. Wow! This is what you should see:
+- what's the key to no projection? OH SNAP ITS EAAAASSSY.
+
+- reload the page and see the correct thing.
+
+Now reload your page in the browser. You should see something like this:
 <- Screenshot of map at this point.->
 
 - lets add MOAR POINTS
