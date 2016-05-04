@@ -1,7 +1,7 @@
 <html>
 <head>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
   <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <style>
     body {
@@ -13,7 +13,7 @@
       color: #555;
     }
     #map {
-      height: 500px;
+      height: 900px;
     }
     .leaflet-container {
       background-color: #eee;
@@ -26,16 +26,25 @@
       height: 5px;
       width: 5px;
     }
+    .btn-comment {
+      display: inline-block;
+    }
+    button {
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
   <h1>How Do You Use Leaflet.js For X,Y (unprojected) Slippy Maps?</h1>
-  <p>Points in X,Y coordinate space.</p>
-  <div id="map"></div>
-  <p>Ok, that's neat, but what happens with a LOT of points?</p>
-  <p>Add 100 at a time:</p>
+
+  
+  <p>What happens with a LOT of points?</p>
+  <p class="btn-comment">Add 100 at a time to find out:</p>
   <button id="add-points" onClick="addPoints(true)">Add Some Points</button>
 
+  <h2>Points in X,Y coordinate space.</h2>
+  <div id="map"></div>
+  
   <script type="text/javascript">
     // Useful clues from: http://gis.stackexchange.com/questions/76059/how-to-project-pixel-coordinates-in-leaflet
 
@@ -50,8 +59,9 @@
     var map = L.map('map', opts).setView([5, 1], 4);
 
     // set view outerbounds, so we don't go scrolling infinitely in any direction
-    var ne = [20,20];
-    var sw = [-1,-1]; //go _just_ outside our starting points area.
+    // go _just_ outside our starting points area.
+    var ne = [22, 22];
+    var sw = [-2, -2]; 
 
     var bounds = new L.LatLngBounds([sw, ne]);
     map.setMaxBounds(bounds);
@@ -62,17 +72,18 @@
       minX = swBounds[0] + 1,
       minY = swBounds[1] + 1,
       points = [],
+      
       genCoord = function(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.random() * (max - min + 1) + min;
       };
 
       for(i=0; i < numPoints; i++) {
-         var newPt = [genCoord(minX, maxX), genCoord(minY, maxY)];
-         points.push(newPt);
+        var newPt = [genCoord(minX, maxX), genCoord(minY, maxY)];
+        points.push(newPt);
       }
+      
       return points;
     }
-
 
     // Define our simple icon for the point markers. We set its shape with CSS!
     var ptOpts = {
@@ -84,7 +95,7 @@
     var addPoint = function(point) {
       var pContent = [
         '<h2>Point:</h2>',
-        '<p>x:', point[1], ', y:', point[0],'</p>'
+        '<p>x: ', point[1], '</p><p>y: ', point[0],'</p>'
       ].join("");
 
       var marker = L.marker(point, ptOpts)
@@ -94,6 +105,7 @@
 
     var addPoints = function(showMany) {
       var points;
+
       if(showMany == true) {
         points = generateLotsOfPoints(100, ne, sw);
       } else {
