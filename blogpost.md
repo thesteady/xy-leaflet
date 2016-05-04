@@ -12,7 +12,7 @@ potential titles:
 
 Have you ever wanted to display x-y data points on your site? There are lots of tools to get the job done! Maybe you need a simple graph with two axes. [D3.js](https://d3js.org/) or [Highcharts](http://www.highcharts.com/) would probably work fine. Want your user to be able to interact with those points? Zoom in/out? What about panning around? These things all feel reasonable with D3.js. Mike Bostock even has example blocks: [a map with zooming and panning](https://bl.ocks.org/mbostock/eec4a6cda2f573574a11) and [a second version](http://bl.ocks.org/mbostock/09dd5ad7d6bfd40187e0). Cool, huh? But what if we wanted something a little different? What if we didn't want to handle writing code for managing zoom/pan? **What if we wanted a custom background under our points?**
 
-I was curious what it would be like to create a display of x-y points on a slippy map using Leaflet.js. [Leaflet.js](http://leafletjs.com) is a popular open-source library for creating and displaying maps on the web. Leaflet is a great tool for making real-world maps with your geospatial data, but I was unsure how it would work with _unprojected_ data -- data without a geographical component. This post will walk you through how to make it work! _Spoiler alert: it's EASY._
+I was curious what it would be like to create a display of x-y points on a slippy map using Leaflet.js. [Leaflet.js](http://leafletjs.com) is a popular open-source library for creating and displaying maps on the web. Leaflet is a great tool for making real-world maps with your geospatial data, but I was unsure how it would work with _unprojected_ data -- data without a geographical component. This post will walk you through how to make it work (_Spoiler alert: it's EASY), and then a few things we can do to customize it a bit more.
 
 ## Before We Start
 
@@ -24,8 +24,7 @@ When working with geospatial data (e.g., GPS points with a latitude and longitud
 
 How do we compare different points on the ground? Well, to make things more complicated, in addition to different projection systems, there are also different _coordinate systems_. We can ignore coordinate systems for this exercise, but I encourage you to learn more about them if you're interested in mapping.
 
-In this example, we want our data to be **unprojected**. This means we want to make sure that Leaflet.js does not apply the Web Mercator projection.
-#**does leaflet have/what is leaflet's default projection?**
+In this example, we want our data to be **unprojected**. This means we want to make sure that Leaflet.js does not apply the Web Mercator projection, which is the default setting.
 
 ## Let's Try It Out!
 ** Want to see the finished code for this project? Check it out on [GitHub](https://github.com/thesteady/xy-leaflet).**
@@ -33,12 +32,45 @@ In this example, we want our data to be **unprojected**. This means we want to m
 To explore how an unprojected web map works in Leaflet, let's use a simple set-up. First, we'll need an `index.html` file with the basic structure like so:
 
 ```
-<- index.html with leaflet and a map div ->
+<html>
+	<head>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+  		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	</head>
+	<body>
+		<div id="map"></div>
+		<script type="text/javascript">
+			// our map JavaScript will go here.
+		</script>
+	</body>
+</html>
 ```
 
-We've pulled in Leaflet.js from a CDN, created a div for our map, and added a script tag where we can write our JavaScript.
+We've pulled in Leaflet.js via CDN, created a specific div for our map, and added a script tag where we will write our JavaScript. Inside that script tag, we'll first instantiate our map:
 
-- basic map setup
+```
+var map = L.map('map', {}).setView([5, 1], 4);
+```
+We pass the `id` of the div we want to use for our map as well as an options object. For the moment, let's not set anything special. What about those numbers in the `setView` call? The array represents our starting center point - the location at which we want the map to be centered on page load. The last parameter, "4", is the initial zoom level.
+
+If you load your `index.html` in a browser at this point, you'll get a whopping dissapoint: no map! But, inspecting the HTML, you'll see that it's there, just not visible. We need to set some styling on it to make it appear. Inside the `<head>` of your HTML, add the following styling:
+
+```
+<style>
+	 #map {
+      height: 500px;
+    }
+    .leaflet-container {
+      background-color: #eee;
+      border: 1px solid #888;
+    }
+</style>
+```
+
+This will give our map a height, a background color, and a border. Try refreshing the page, and you should see your map!
+
+
+
 - what's the key to no projection? OH SNAP ITS EAAAASSSY.
 
 - lets add some points
@@ -64,6 +96,8 @@ Now reload your page in the browser. Wow! This is what you should see:
 - mention mounting all the points individually vs. as a layer (performance concerns?)
 - link to my github repo
 
+## Adding a Custom Basemap
+- add a custom basemap. maybe 4 differently colored quadrants so we can see what "area" we're exploring?
 
 ## Summary
 - reiterate why
